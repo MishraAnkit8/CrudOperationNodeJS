@@ -106,170 +106,180 @@
         var editModal = document.getElementById('editModal');
         var updateBtn = document.getElementById('updateBtn');
 
-
-
+// for insertt data to from 
         addBtn.addEventListener("click", () => {
-            let name = document.getElementById('name').value;
-            let email = document.getElementById('email').value;
-            let phone = document.getElementById('phone').value;
+                                let name = document.getElementById('name').value;
+                                let email = document.getElementById('email').value;
+                                let phone = document.getElementById('phone').value;
 
 
-            const task = {
-                name: name,
-                email: email,
-                phone: phone,
+                                const task = {
+                                    name: name,
+                                    email: email,
+                                    phone: phone,
 
-            }
-            console.log("Task>>>>>>>>>", task);
+                                }
+                                console.log("Task>>>>>>>>>", task);
             fetch("/insertData", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(task)
-            }).then((result) => {
-                return result.json();
-            }).then((data) => {
-                console.log("DATA>>>>>>>>>>>>>>", data);
-                if (data.status === 'done') {
-                    taskId = data.taskId;
-
-                    console.log('id>>>>>>>>of >>>>>>', taskId)
-                    //append new row to the table 
-                    var newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                            <td>${taskId}</td>
-                            <td class="name">${name}</td>
-                            <td class="email">${email}</td>
-                            <td class="phone">${phone}</td>
-                            
-                            <td>
-                                <button class="delete" data-task-id = " ${taskId} ">Delete</button>
-                                <button class="edit" data-task-id = " ${taskId} ">Edit</button>
-                            </td>` ;
-                    taskList.appendChild(newRow);
-
-                    //clear input fields 
-                    name.value = '';
-                    email.value = '';
-                    phone.value = '';
-
-                }
-                else {
-                    alert('failed to add ')
-                }
-
-            }).catch((err) => {
-                console.log("Error>>>>>>>>>>>");
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(task)
             })
-        });
-        // for deleting the elemnet       
-        taskList.addEventListener('click', function (event) {
-            if (event.target.classList.contains('delete')) {
-                const tableItem = event.target.parentElement.parentElement;;
-                console.log('event.target.parentElement', tableItem)
-                const taskId = event.target.getAttribute('data-task-id');
-                console.log('id for delete >>>', taskId);
+                   .then((result) => {
+                                return result.json();
+                            })
+                    .then((data) => {
+                                console.log("DATA>>>>>>>>>>>>>>", data);
+                                if (data.status === 'done') {
+                                            taskId = data.taskId;
 
-                //fetching api for delete
+                                            console.log('id>>>>>>>>of >>>>>>', taskId)
+                                            //append new row to the table 
+                                            var newRow = document.createElement('tr');
+                                            newRow.innerHTML = `
+                                                    <td>${taskId}</td>
+                                                    <td class="name">${name}</td>
+                                                    <td class="email">${email}</td>
+                                                    <td class="phone">${phone}</td>
+                                                    
+                                                    <td>
+                                                        <button class="delete" data-task-id = " ${taskId} ">Delete</button>
+                                                        <button class="edit" data-task-id = " ${taskId} ">Edit</button>
+                                                    </td>` ;
+
+                                            taskList.appendChild(newRow);
+
+                                                    //clear input fields 
+                                                    name.value = '';
+                                                    email.value = '';
+                                                    phone.value = '';
+
+                                }
+
+                                else {
+                                    alert('failed to add ')
+                                }
+
+                            })
+
+                    .catch((err) => {
+
+                                console.log("Error>>>>>>>>>>>");
+                           })
+       
+                        });
+// for deleting the elemnet       
+        taskList.addEventListener('click', function (event) {
+                                if (event.target.classList.contains('delete')) {
+                                    const tableItem = event.target.parentElement.parentElement;;
+                                    console.log('event.target.parentElement', tableItem)
+                                    const taskId = event.target.getAttribute('data-task-id');
+                                    console.log('id for delete >>>', taskId);
+
+                                    //fetching api for delete
 
                 fetch('delete-task', {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ taskId: taskId })
-                })
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ taskId: taskId })
+                                        })
                     // handling the peomis
                     .then((result) => {
-                        if (!result.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return result.json();
-                    })
+                                            if (!result.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            return result.json();
+                                        })
                     .then((data) => {
-                        if (data.status === 'done') {
-                            tableItem.remove();
-                        }
-                        else {
-                            alert('unable to delete a task');
-                        }
-                    })
+                                            if (data.status === 'done') {
+                                                tableItem.remove();
+                                            }
+                                            else {
+                                                alert('unable to delete a task');
+                                            }
+                                        })
             }
 
             
         })
 
+// for updating the form data from frontend 
         taskList.addEventListener("click", (event) => {
-            if (event.target.classList.contains('edit')) {
-                event.preventDefault();
-                const rowItem = event.target.closest('tr');
-                console.log('related Row ==:', rowItem)
-                const taskId = event.target.getAttribute('data-task-id');
-                console.log('id for edit :', taskId);
+                        if (event.target.classList.contains('edit')) {
+                            event.preventDefault();
+                            const rowItem = event.target.closest('tr');
+                            console.log('related Row ==:', rowItem)
+                            const taskId = event.target.getAttribute('data-task-id');
+                            console.log('id for edit :', taskId);
 
-                // Capture the specific row's data and task ID
-                const taskNameElement = rowItem.querySelector('.name');
-                const taskEmailElement = rowItem.querySelector('.email');
-                const taskPhoneElement = rowItem.querySelector('.phone');
+                            // Capture the specific row's data and task ID
+                            const taskNameElement = rowItem.querySelector('.name');
+                            const taskEmailElement = rowItem.querySelector('.email');
+                            const taskPhoneElement = rowItem.querySelector('.phone');
 
-                console.log('taskelement for name ,email, phone==>', taskNameElement, taskEmailElement, taskPhoneElement);
-
-
-                // Update the modal form with the current values
-                document.getElementById('modalName').value = taskNameElement.textContent;
-                console.log('taskNameElement.textContent===>', taskNameElement.textContent);
-                document.getElementById('modalEmail').value = taskEmailElement.textContent;
-                document.getElementById('modalPhone').value = taskPhoneElement.textContent;
+                            console.log('taskelement for name ,email, phone==>', taskNameElement, taskEmailElement, taskPhoneElement);
 
 
-                // Show the edit modal form for edit and update 
-                editModal.style.display = 'block';
-
-                // Add an event listener to the "Update" button in the modal
-                updateBtn.addEventListener("click", () => {
-                    const updatedName = document.getElementById('modalName').value;
-                    const updatedEmail = document.getElementById('modalEmail').value;
-                    const updatedPhone = document.getElementById('modalPhone').value;
-
-                    console.log('updated value :', updatedName, updatedEmail, updatedPhone);
+                            // Update the modal form with the current values
+                            document.getElementById('modalName').value = taskNameElement.textContent;
+                            console.log('taskNameElement.textContent===>', taskNameElement.textContent);
+                            document.getElementById('modalEmail').value = taskEmailElement.textContent;
+                            document.getElementById('modalPhone').value = taskPhoneElement.textContent;
 
 
-                    // Update the specific row with the new values
-                    taskNameElement.textContent = updatedName;
-                    taskEmailElement.textContent = updatedEmail;
-                    taskPhoneElement.textContent = updatedPhone;
+                            // Show the edit modal form for edit and update 
+                            editModal.style.display = 'block';
+
+                            // Add an event listener to the "Update" button in the modal
+                            updateBtn.addEventListener("click", () => {
+                                const updatedName = document.getElementById('modalName').value;
+                                const updatedEmail = document.getElementById('modalEmail').value;
+                                const updatedPhone = document.getElementById('modalPhone').value;
+
+                                console.log('updated value :', updatedName, updatedEmail, updatedPhone);
 
 
-                    // Hide the edit modal
-                    editModal.style.display = 'none';
+                                // Update the specific row with the new values
+                                taskNameElement.textContent = updatedName;
+                                taskEmailElement.textContent = updatedEmail;
+                                taskPhoneElement.textContent = updatedPhone;
 
-                    // Send a request to update the data on the server using the updated values
-                    const updatedData = {
-                        taskId: taskId,
-                        updatedName: updatedName,
-                        updatedEmail: updatedEmail,
-                        updatedPhone: updatedPhone,
 
-                    };
-                    console.log('updatedData ===>> :', updatedData.taskId, updatedData.updatedName, updatedData.updatedEmail, updatedPhone)
+                                // Hide the edit modal
+                                editModal.style.display = 'none';
+
+                                // Send a request to update the data on the server using the updated values
+                                const updatedData = {
+                                    taskId: taskId,
+                                    updatedName: updatedName,
+                                    updatedEmail: updatedEmail,
+                                    updatedPhone: updatedPhone,
+
+                                };
+                                console.log('updatedData ===>> :', updatedData.taskId, updatedData.updatedName, updatedData.updatedEmail, updatedPhone)
 
                     // Send the updated data to the server using fetch and update the database
                     fetch('/update-task', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(updatedData)
-                    }).then((response) => {
-                        if (response.ok) {
-                            // Data updated successfully on the server
-                            return response.json();
-                        } else {
-                            // Handle errors here, e.g., show an error message
-                            console.error('Failed to update data on the server');
-                        }
-                    }).then((data) => {
-                        if (data.status === 'error') {
-                            console.error('Error updating data:', data.message);
-                        }
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify(updatedData)
+                                            })
+                        .then((response) => {
+                                                if (response.ok) {
+                                                    // Data updated successfully on the server
+                                                    return response.json();
+                                                } else {
+                                                    // Handle errors here, e.g., show an error message
+                                                    console.error('Failed to update data on the server');
+                                                }
+                                            })
+                        .then((data) => {
+                                                if (data.status === 'error') {
+                                                    console.error('Error updating data:', data.message);
+                                                }
+                                        });
                     });
-                });
-            }
+                }
         });
 
 
