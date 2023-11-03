@@ -193,7 +193,7 @@
                     })
             }
 
-
+            
         })
 
         taskList.addEventListener("click", (event) => {
@@ -222,12 +222,7 @@
                 // Show the edit modal form for edit and update 
                 editModal.style.display = 'block';
 
-               
-            }
-        });
-
-
-         // Add an event listener to the "Update" button in the modal
+                // Add an event listener to the "Update" button in the modal
                 updateBtn.addEventListener("click", () => {
                     const updatedName = document.getElementById('modalName').value;
                     const updatedEmail = document.getElementById('modalEmail').value;
@@ -274,6 +269,8 @@
                         }
                     });
                 });
+            }
+        });
 
 
 
