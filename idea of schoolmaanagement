@@ -8,3 +8,63 @@ https://github.com/SparshJain2000/edutracker
 https://github.com/Guru-1205/Attendance-management/tree/master/server
 https://github.com/drazomo/pernSignInUpComponent
 https://github.com/irenemmassy?tab=repositories
+
+
+
+npm init ==
+nodejs==installation==>  npm i ejs express dotenv nodemon
+
+for tailwind ==>npm install pug
+detaila==>
+
+{
+  "name": "research",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
+here "start": "nodemon app", for start the sever
+
+
+for adding static pages in express 
+const express = require('express');
+require('dotenv').config();
+
+const homeRouter = require('./src/router/home');
+
+ const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({
+    extended : true
+}));
+
+app.set('view engine' , 'ejs');
+app.set('views' , './src/views');
+app.use(express.static(__dirname + '/public'));
+app.use(homeRouter);
+
+const PORT = process.env.APP_PORT || 3000;
+
+app.listen(PORT,(err)=>{
+    if(err){
+        console.log('somthis went wrong ', err);
+        return err;
+    }
+    console.log(`server is running successfully at port ${PORT}`);
+
+})
+
